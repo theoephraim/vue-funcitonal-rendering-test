@@ -21,19 +21,24 @@ const Stack = (
 ): VNode => {
   const classes = {
     stack: true,
-    [`--spacing-${props.spacing}`]: true,
-    [`--spacing-${props.spacingMobile}-mobile-only`]: !!props.spacingMobile,
-    [`--spacing-${props.spacingTablet}-tablet`]: !!props.spacingTablet,
-    [`--spacing-${props.spacingDesktop}-desktop`]: !!props.spacingDesktop,
-    [`--spacing-${props.spacingWide}-wide`]: !!props.spacingWide,
-    [`--spacing-${props.spacingHuge}-huge`]: !!props.spacingHuge,
+    // [`--spacing-${props.spacing}`]: true,
+    // [`--spacing-${props.spacingMobile}-mobile-only`]: !!props.spacingMobile,
+    // [`--spacing-${props.spacingTablet}-tablet`]: !!props.spacingTablet,
+    // [`--spacing-${props.spacingDesktop}-desktop`]: !!props.spacingDesktop,
+    // [`--spacing-${props.spacingWide}-wide`]: !!props.spacingWide,
+    // [`--spacing-${props.spacingHuge}-huge`]: !!props.spacingHuge,
   };
 
   const wrappedChildren = [] as VNode[];
   const children = getSlotChildren(context.slots.default);
   for (let i = 0; i < children.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    wrappedChildren.push(children[i]!);
+    if (!children[i]) continue;
+    
+    // adding this extra Fragment wrapper fixes my issue, which I've been unable to reproduce here
+    // wrappedChildren.push(h(Fragment, {}, [children[i]]));
+
+    wrappedChildren.push(h(children[i]));
+
     if (props.dividers && i < children.length - 1) {
       wrappedChildren.push(h(Divider));
     }
